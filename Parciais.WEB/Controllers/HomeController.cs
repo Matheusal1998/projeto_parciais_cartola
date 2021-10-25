@@ -25,6 +25,8 @@ namespace Parciais.WEB.Controllers
         {
            var status =  await RetornarDados();
 
+           ViewBag.Rodada = "#" + status.rodada_atual;
+
             return View(status);
         }
 
