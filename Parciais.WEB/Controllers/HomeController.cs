@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Parciais.WEB.ViewModel.Home;
 
 namespace Parciais.WEB.Controllers
 {
@@ -24,10 +25,15 @@ namespace Parciais.WEB.Controllers
         public async Task<IActionResult> Index()
         {
            var status =  await RetornarDados();
+           var maisEscalados = await MaisEscalados();
+
+           DadosDashboard model = new DadosDashboard();
+           model.Status = status;
+           model.MaisEscalados = maisEscalados;
 
            ViewBag.Rodada = "#" + status.rodada_atual;
 
-            return View(status);
+            return View(model);
         }
 
         public IActionResult Privacy()
@@ -71,6 +77,29 @@ namespace Parciais.WEB.Controllers
             }
 
             return status;
+        }
+        private async Task<List<MaisEscalados>> MaisEscalados()
+        {
+            string URI = "https://api.cartolafc.globo.com/mercado/destaques";
+
+        
+
+            string agent = "ClientDemo/1.0.0.1 test user agent DefaultRequestHeaders";
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", agent);
+
+            using (var response = await client.GetAsync(URI))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var FuncionarioJsonString = await response.Content.ReadAsStringAsync();
+
+                   var maisEscalados = JsonConvert.DeserializeObject<List<MaisEscalados>>(FuncionarioJsonString);
+                   return maisEscalados;
+                }
+            }
+
+            return null;
 
         }
     }

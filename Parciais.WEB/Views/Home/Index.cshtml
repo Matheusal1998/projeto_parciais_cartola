@@ -1,4 +1,4 @@
-﻿@model Parciais.WEB.Models.Status
+﻿@model Parciais.WEB.ViewModel.Home.DadosDashboard
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-5 div-dashboard-times-mais-escalados">
                     <h3 class="titulo-principal">TIMES ESCALADOS</h3>
-                    <h4 class="sub-titulo-principal">500 MI</h4>
+                    <h4 class="sub-titulo-principal">@Model.Status.times_escalados</h4>
                 </div>
                 <div class="col-5 div-dashboard-jogador-mais-escalado">
                     <div class="div-dashboard-foto-jogador-mais-escalado">
@@ -26,7 +26,17 @@
             </div>
            
             <div class="col-11 div-dashboard-jogadores-mais-escalados ">
+                <div class="row">
+                    @foreach (var item in Model.MaisEscalados)
+                    {
+                        <div class="col-3">
+                            <img src="@item.Atleta.foto.Replace("FORMATO","80x80")"/>
+                            <p><strong>@item.Atleta.apelido_abreviado</strong></p>
+                            <p>@string.Format("{0:00,00}", item.escalacoes).Replace(",",".")</p>
 
+                        </div>
+                    }
+                </div>
             </div>
         </div>
         <div class="col-4">
@@ -41,6 +51,6 @@
 
 <div class="text-center">
     <div>
-        <p>@Model.FechamentoMercado</p>
+        <h4 class="sub-titulo-principal">@Model.Status.FechamentoMercado</h4>
     </div>
 </div>
